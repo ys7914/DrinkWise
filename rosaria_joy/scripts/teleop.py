@@ -17,7 +17,7 @@ def listener():
     # starts the node
     rospy.init_node('listener', anonymous=True)
     
-    # publishing to "RosAria/cmd_vel" to control turtle1
+    # publishing to "RosAria/cmd_vel" to control P3AT
     global pub
     pub = rospy.Publisher('RosAria/cmd_vel', Twist)
     # subscribed to joystick inputs on topic "joy"

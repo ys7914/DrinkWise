@@ -1,0 +1,8 @@
+<launch>
+    <node name="RosAria" pkg="rosaria" type="RosAria">
+        <param name="~port" value="/dev/ttyUSB2" />
+    </node>
+    <node name="joy_node" pkg="joy" type="joy_node" />
+    <node name="teleop" pkg="rosaria_joy" type="teleop.py" />
+
+</launch>

@@ -10,5 +10,20 @@ DrinkWise is an interactive mobile bar designated for formal events and receptio
 - Ayodeji Akintunde
 - Yumeng Sun
 
-# `rosaria_joy`
+# Arduino	
+Add description
+
+# FaceRec	
+Add description
+
+# SpeechRec	
+Add description
+
+# SpeechSyn	
+Add description
+
+# WebApp
+Add description
+
+# rosaria_joy
 A simple P3AT movement controlling package using the `Joy` package. The file `rosaria_joy/scripts/teleop.py` is written refering [this tutorial](https://andrewdai.co/xbox-controller-ros.html#rosjoy).

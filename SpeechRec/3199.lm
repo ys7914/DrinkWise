@@ -1,0 +1,92 @@
+Language model created by QuickLM on Mon Oct 23 20:35:33 EDT 2017
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 13 sentences and 20 words
+
+\data\
+ngram 1=20
+ngram 2=31
+ngram 3=18
+
+\1-grams:
+-0.8305 </s> -0.3010
+-0.8305 <s> -0.2316
+-1.9445 BLOODY -0.2961
+-1.9445 COSMOPOLITAN -0.2316
+-1.9445 DAIQUIRI -0.2316
+-1.9445 FASHIONED -0.2316
+-1.9445 HIGHBALL -0.2316
+-1.9445 ICED -0.2961
+-1.9445 ISLAND -0.2961
+-1.9445 LONG -0.2961
+-1.9445 MANHATTAN -0.2316
+-1.9445 MARGARITA -0.2316
+-1.9445 MARTINI -0.2316
+-1.9445 MARY -0.2316
+-1.9445 MOJITO -0.2316
+-1.9445 NEGRONI -0.2316
+-1.9445 NO -0.2316
+-1.9445 OLD -0.2961
+-1.9445 TEA -0.2316
+-1.9445 YES -0.2316
+
+\2-grams:
+-1.4150 <s> BLOODY 0.0000
+-1.4150 <s> COSMOPOLITAN 0.0000
+-1.4150 <s> DAIQUIRI 0.0000
+-1.4150 <s> HIGHBALL 0.0000
+-1.4150 <s> LONG 0.0000
+-1.4150 <s> MANHATTAN 0.0000
+-1.4150 <s> MARGARITA 0.0000
+-1.4150 <s> MARTINI 0.0000
+-1.4150 <s> MOJITO 0.0000
+-1.4150 <s> NEGRONI 0.0000
+-1.4150 <s> NO 0.0000
+-1.4150 <s> OLD 0.0000
+-1.4150 <s> YES 0.0000
+-0.3010 BLOODY MARY 0.0000
+-0.3010 COSMOPOLITAN </s> -0.3010
+-0.3010 DAIQUIRI </s> -0.3010
+-0.3010 FASHIONED </s> -0.3010
+-0.3010 HIGHBALL </s> -0.3010
+-0.3010 ICED TEA 0.0000
+-0.3010 ISLAND ICED 0.0000
+-0.3010 LONG ISLAND 0.0000
+-0.3010 MANHATTAN </s> -0.3010
+-0.3010 MARGARITA </s> -0.3010
+-0.3010 MARTINI </s> -0.3010
+-0.3010 MARY </s> -0.3010
+-0.3010 MOJITO </s> -0.3010
+-0.3010 NEGRONI </s> -0.3010
+-0.3010 NO </s> -0.3010
+-0.3010 OLD FASHIONED 0.0000
+-0.3010 TEA </s> -0.3010
+-0.3010 YES </s> -0.3010
+
+\3-grams:
+-0.3010 <s> BLOODY MARY
+-0.3010 <s> COSMOPOLITAN </s>
+-0.3010 <s> DAIQUIRI </s>
+-0.3010 <s> HIGHBALL </s>
+-0.3010 <s> LONG ISLAND
+-0.3010 <s> MANHATTAN </s>
+-0.3010 <s> MARGARITA </s>
+-0.3010 <s> MARTINI </s>
+-0.3010 <s> MOJITO </s>
+-0.3010 <s> NEGRONI </s>
+-0.3010 <s> NO </s>
+-0.3010 <s> OLD FASHIONED
+-0.3010 <s> YES </s>
+-0.3010 BLOODY MARY </s>
+-0.3010 ICED TEA </s>
+-0.3010 ISLAND ICED TEA
+-0.3010 LONG ISLAND ICED
+-0.3010 OLD FASHIONED </s>
+
+\end\

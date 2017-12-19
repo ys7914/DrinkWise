@@ -1,0 +1,77 @@
+Language model created by QuickLM on Thu Oct 26 18:29:17 EDT 2017
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 10 sentences and 16 words
+
+\data\
+ngram 1=16
+ngram 2=24
+ngram 3=14
+
+\1-grams:
+-0.8325 </s> -0.3010
+-0.8325 <s> -0.2319
+-1.8325 BLACK -0.2946
+-1.8325 COLADA -0.2319
+-1.8325 COSMOPOLITON -0.2319
+-1.8325 CUBA -0.2946
+-1.8325 DOG -0.2319
+-1.8325 LIBRE -0.2319
+-1.8325 MANHATTAN -0.2319
+-1.8325 NO -0.2319
+-1.8325 PINA -0.2946
+-1.8325 ROSE -0.2319
+-1.8325 RUSSIAN -0.2319
+-1.8325 SALTY -0.2946
+-1.8325 SCREWDRIVER -0.2319
+-1.8325 YES -0.2319
+
+\2-grams:
+-1.3010 <s> BLACK 0.0000
+-1.3010 <s> COSMOPOLITON 0.0000
+-1.3010 <s> CUBA 0.0000
+-1.3010 <s> MANHATTAN 0.0000
+-1.3010 <s> NO 0.0000
+-1.3010 <s> PINA 0.0000
+-1.3010 <s> ROSE 0.0000
+-1.3010 <s> SALTY 0.0000
+-1.3010 <s> SCREWDRIVER 0.0000
+-1.3010 <s> YES 0.0000
+-0.3010 BLACK RUSSIAN 0.0000
+-0.3010 COLADA </s> -0.3010
+-0.3010 COSMOPOLITON </s> -0.3010
+-0.3010 CUBA LIBRE 0.0000
+-0.3010 DOG </s> -0.3010
+-0.3010 LIBRE </s> -0.3010
+-0.3010 MANHATTAN </s> -0.3010
+-0.3010 NO </s> -0.3010
+-0.3010 PINA COLADA 0.0000
+-0.3010 ROSE </s> -0.3010
+-0.3010 RUSSIAN </s> -0.3010
+-0.3010 SALTY DOG 0.0000
+-0.3010 SCREWDRIVER </s> -0.3010
+-0.3010 YES </s> -0.3010
+
+\3-grams:
+-0.3010 <s> BLACK RUSSIAN
+-0.3010 <s> COSMOPOLITON </s>
+-0.3010 <s> CUBA LIBRE
+-0.3010 <s> MANHATTAN </s>
+-0.3010 <s> NO </s>
+-0.3010 <s> PINA COLADA
+-0.3010 <s> ROSE </s>
+-0.3010 <s> SALTY DOG
+-0.3010 <s> SCREWDRIVER </s>
+-0.3010 <s> YES </s>
+-0.3010 BLACK RUSSIAN </s>
+-0.3010 CUBA LIBRE </s>
+-0.3010 PINA COLADA </s>
+-0.3010 SALTY DOG </s>
+
+\end\

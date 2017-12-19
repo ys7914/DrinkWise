@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style>
+        h1,h2,body{
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+
+            background-color: #ffffff;
+        }
+
+        #menu{
+            padding: 10px;
+            margin: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        box{
+            padding: 10px;
+            display: inline-block;
+            width: 300px;
+        }
+        button{
+            background-color: white;
+            padding: 50px;
+            margin: 10px;
+        }
+        description{
+            width: 100%;
+            text-align: center;
+            display: block;
+        }
+        button:hover img{
+            opacity:0.4;
+        }
+        #loader {
+            position: absolute;
+            display: none;
+            left: 0;
+            top: 20%;
+            z-index: 1;
+            margin: -75px 0 0 -75px;
+            width: 100%;
+            height: 100%;
+            background: url("loading.gif") fixed center;
+            background-repeat: no-repeat;
+        }
+
+
+        /* Add animation to "page content" */
+        .animate-bottom {
+            position: relative;
+            -webkit-animation-name: animatebottom;
+            -webkit-animation-duration: 3s;
+            animation-name: animatebottom;
+            animation-duration: 3s
+        }
+
+        @-webkit-keyframes animatebottom {
+            from { bottom:-100px; opacity:0 }
+            to { bottom:0px; opacity:1 }
+        }
+
+        @keyframes animatebottom {
+            from{ bottom:-100px; opacity:0 }
+            to{ bottom:0; opacity:1 }
+        }
+        #finished {
+            display: none;
+            text-align: center;
+            top: 20%;
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            text-align: center;
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+    </style>
+    <meta charset="utf-8" />
+
+
+    <script type="text/javascript" src="/HCR/roslibjs/build/roslib.min.js"></script>
+    <script type="text/javascript" src="/HCR/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" type="text/javascript">
+
+        // Connecting to ROS
+        // -----------------
+
+        var ros = new ROSLIB.Ros({
+            url : 'ws://localhost:9090'
+        });
+
+        ros.on('connection', function() {
+            console.log('Connected to websocket server.');
+        });
+
+        ros.on('error', function(error) {
+            console.log('Error connecting to websocket server: ', error);
+        });
+
+        ros.on('close', function() {
+            console.log('Connection to websocket server closed.');
+        });
+
+        // Publishing a Topic
+        // ------------------
+
+
+
+
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "drinksdatabase.csv",
+                dataType: "text",
+                success: function(data) {processData(data);}
+            });
+
+        });
+
+
+        var drinksList = [];
+        var drinksDatabase = [];
+        var faceDatabase = Array.apply(null, Array(10)).map(Number.prototype.valueOf,0);
+        var totalUnits = 0;
+        var totalCalories = 0;
+        var numDrinks=0;
+        var face_id = 0;
+        var reconfirm = 0;
+        var index = 0;
+        var MODE;
+
+
+        var RobotSpeak = new ROSLIB.Topic({
+            ros : ros,
+            name : '/chatter',
+            messageType : 'std_msgs/String'
+        });
+
+        var patronSpeech = new ROSLIB.Topic({
+            ros : ros,
+            name : '/drinks_listener',
+            messageType : 'std_msgs/String'
+        });
+
+
+        var arduinoSubsystem = new ROSLIB.Topic({
+            ros : ros,
+            name : '/arduino_listener',
+            messageType : 'std_msgs/String'
+        });
+
+        var getFace = new ROSLIB.Topic({
+            ros : ros,
+            name : '/face',
+            messageType : 'std_msgs/Int16'
+        });
+
+
+        getFace.subscribe(function(message){
+            if(MODE == "GET_FACE") {
+                if (message.data != 100){
+                    face_id = message.data;
+                    faceProcessing();
+                }
+            }
+        });
+
+        patronSpeech.subscribe(function(message) {
+
+            if (MODE == "REQUEST_DRINK"){
+                console.log("Message Received:" + message.data + " " + MODE);
+                if (drinksList.indexOf(message.data) >= 0) {
+                    MODE = "CONFIRM_DRINK";
+                    console.log("Drink Received:" + message.data);
+                    index = drinksList.indexOf(message.data);
+                    console.log(index);
+                    startModal();
+                }
+            }
+            if (MODE == "CONFIRM_DRINK"){
+                console.log("Message Received:" + message.data + " " + MODE);
+                if (message.data == "YESS") {
+                    endModal();
+                    if (reconfirm == 0) {
+                        evaluateThreshold();
+                    }
+                    else if (reconfirm ==1 ){
+                        choose();
+                    }
+
+                }
+                else if (message.data == "NOO") {
+                    endModal();
+                    chooseDrink();
+                }
+
+            }
+
+        });
+
+        arduinoSubsystem.subscribe(function(message) {
+            if (MODE == "ARDUINO")
+        {
+            //when the arduino process finishes then publish "finished" to the ros topic
+            if (message.data == "finished") {
+                finishDrink();
+                document.getElementById("finished").style.display = "block";
+            }
+            if (message.data == "refill") {
+                refilling();
+            }
+        }
+        });
+
+
+        function processData(data) {
+
+            var allTextLines = data.split(/\r\n|\n/);
+
+            numDrinks = allTextLines.length-1;
+
+            for(var i=0;i<numDrinks;i++){
+                drinksDatabase.push(allTextLines[i].split('|'));
+                drinksList.push(allTextLines[i].split('|')[0]);
+            }
+            generateDrinks(numDrinks)
+        }
+
+
+        function generateDrinks(numDrinks){
+            for (var i =0; i<numDrinks;i++){
+                var box = document.createElement('box');
+                var button = document.createElement('button');
+                var img= document.createElement('img');
+                var title = document.createElement("h2");
+                title.innerHTML = drinksDatabase[i][0];
+                img.setAttribute("src",drinksDatabase[i][0]+".png");
+                button.setAttribute("id",i);
+                button.appendChild(img);
+                button.addEventListener('click',function(){startModal(this.id);});
+                box.appendChild(button);
+                box.appendChild(title);
+                document.getElementById("menu").appendChild(box);
+            }
+            findFace();
+        }
+
+
+        function findFace(){
+            MODE = "GET_FACE";
+            getFace.publish(new ROSLIB.Message({
+                data:100
+            }));
+        }
+
+        function faceProcessing(){
+            console.log("Face ID is", face_id);
+
+            if(faceDatabase[face_id] == 0){
+                console.log(faceDatabase);
+                RobotSpeak.publish(new ROSLIB.Message({
+                    data: "Hi, I've not seen you before! Nice to meet you. I'm Drink Wise."
+                }));
+            }
+            else{
+                console.log(faceDatabase);
+                RobotSpeak.publish(new ROSLIB.Message({
+                    data: "Hi! Welcome back! What will it be this time?"
+                }));
+            }
+
+                chooseDrink();
+        }
+
+        function chooseDrink(){
+
+            console.log("Listening...");
+            MODE = "REQUEST_DRINK";
+
+        }
+
+        function startModal(){
+            console.log(drinksDatabase);
+
+            chosen_drink = drinksDatabase[index][0];
+
+            console.log(chosen_drink);
+            var modal = document.getElementById("drinkModal");
+            var modal_content = document.getElementById("content");
+            modal.style.display="block";
+            modal_content.innerHTML=
+                '<h2>You have chosen the '
+                +chosen_drink
+                +'.</h2><br><p>'
+                +drinksDatabase[index][1]
+                +'</p><br><h2>Please confirm your selection.</h2><br>';
+            RobotSpeak.publish(new ROSLIB.Message({
+                data: "You have chosen the "+ chosen_drink
+            }));
+            var yesButton = document.createElement('button');
+            yesButton.innerHTML="YES";
+            var noButton = document.createElement('button');
+            noButton.innerHTML="NO";
+            noButton.addEventListener('click',function(){
+                console.log("Wrong drink");
+                endModal();
+                chooseDrink();
+            });
+            yesButton.addEventListener('click',function(){
+                if (reconfirm == 0) {
+                    evaluateThreshold();
+                }
+                else if (reconfirm ==1 ){
+                    choose();
+                }
+
+
+            });
+            var chosen_anim= document.createElement('img');
+            chosen_anim.setAttribute("src",chosen_drink+".png");
+            modal_content.appendChild(chosen_anim);
+            modal_content.innerHTML+="<br>";
+            modal_content.appendChild(yesButton);
+            modal_content.appendChild(noButton);
+
+
+        }
+
+        function choose(){
+                MODE = "ARDUINO";
+                console.log(MODE);
+                totalCalories += parseFloat(drinksDatabase[index][3]);
+                console.log("Face",faceDatabase[face_id]);
+                if (faceDatabase[face_id] != 0) {
+                    totalUnits = parseFloat(drinksDatabase[index][2]) + parseFloat(faceDatabase[face_id]);
+                    faceDatabase[face_id] = totalUnits;
+                }
+                else {
+                    totalUnits = parseFloat(drinksDatabase[index][2]);
+                    faceDatabase[face_id] = totalUnits;
+                }
+                console.log("Making drink...");
+                console.log("Total Calories: ", totalCalories.toFixed(2));
+                console.log("Total Units: ", totalUnits.toFixed(2));
+                endModal();
+                startLoading();
+
+        }
+
+
+        function evaluateThreshold(){
+            var t1 = 3;
+            var t2 = 4;
+            var t3 = 6;
+            var t4 = 9;
+            newtotalUnits = parseFloat(drinksDatabase[index][2]) + parseFloat(faceDatabase[face_id]);
+            if (t1 < newtotalUnits && newtotalUnits < t2){
+                reconfirm = 1;
+                MODE == "REQUEST_DRINK";
+                console.log("You've had quite a few drinks, maybe have some food or choose something a bit less alcoholic. How about some water?");
+                RobotSpeak.publish(new ROSLIB.Message({
+                    data: "You've had quite a few drinks, maybe have some food or choose something a bit less alcoholic. How about some water?"
+                }));
+
+
+            }
+            else if (t2 < newtotalUnits && newtotalUnits < t3) {
+                reconfirm = 1;
+                MODE == "REQUEST_DRINK";
+                console.log("With the amount of alcohol that you've consumed, even I, an armless robot, could beat you in an arm wrestle right now!");
+                RobotSpeak.publish(new ROSLIB.Message({
+                    data: "With the amount of alcohol that you've consumed, even I, an armless robot, could beat you in an arm wrestle right now!"
+                }));
+
+            }
+            else if (t3 < newtotalUnits && newtotalUnits < t4) {
+                reconfirm = 1;
+                MODE == "REQUEST_DRINK";
+                console.log("Please consider having some food before you consume any more, I've heard the canapes are excellent!");
+                RobotSpeak.publish(new ROSLIB.Message({
+                    data: "Please consider having some food before you consume any more, I've heard the salmon is excellent!"
+                }));
+
+            }
+            else if (t4 < newtotalUnits) {
+                reconfirm = 1;
+                console.log("I'm sorry, you've had way too much to drink. Please step aside so I can serve someone else.");
+                RobotSpeak.publish(new ROSLIB.Message({
+                    data: "I'm sorry, you've had way too much to drink. Please step aside so I can serve someone else."
+                }));
+                endModal();
+                setTimeout(findFace,4000);
+            }
+            else{
+                choose();
+            }
+
+        }
+
+        function endModal(){
+            document.getElementById("content").innerHTML= "";
+            document.getElementById("drinkModal").style.display="none";
+        }
+
+        function startLoading(){
+
+            chosen_drink = drinksDatabase[index][0];
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("loader").style.display = "block";
+            RobotSpeak.publish(new ROSLIB.Message({
+                data: "Now making your "+ chosen_drink
+            }));
+            arduinoSubsystem.publish(new ROSLIB.Message({
+                data: chosen_drink
+            }));
+
+        }
+
+        function finishDrink(){
+            //document.getElementById("finished").style.display = "block";
+            document.getElementById("loader").style.display = "none";
+            reconfirm = 0;
+            RobotSpeak.publish(new ROSLIB.Message({
+                data: "Enjoy your drink."
+            }));
+            setTimeout(displayMenu,3000);
+        }
+        function displayMenu(){
+            document.getElementById("finished").style.display = "none";
+            document.getElementById("menu").style.display = "block";
+            findFace();
+        }
+
+
+    </script>
+</head>
+
+<body>
+<div id="loader"></div>
+<div id="menu">
+    <h1 style="text-align: center">Please select a drink</h1>
+</div>
+<div style="display:none;" id="finished" class="animate-bottom">
+    <h2>Tada!</h2>
+    <p>Enjoy your drink!</p>
+</div>
+
+<div id="drinkModal" class="modal" style="display:none;">
+
+    <div class="modal-content" id="content"></div>
+
+
+</div>
+</body>
+</html>

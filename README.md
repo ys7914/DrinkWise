@@ -11,19 +11,22 @@ DrinkWise is an interactive mobile bar designated for formal events and receptio
 - Yumeng Sun
 
 # Arduino	
-Add description
+Includes the code used to control the servos so that the base opon which the patron's cup is placed rotates until the correct bottle is above the cup. Written in C for Arduino.
 
 # FaceRec	
-Add description
+Includes the face recognition code with queueing functionality.
 
 # SpeechRec	
-Add description
+Includes the speech recognition code.
 
 # SpeechSyn	
-Add description
+The speech synthesis code for DrinkWise. The sound_play from audio_common library was used, the soundplay_node file must be run before being able to use this code.
 
 # WebApp
-Add description
+The code for the web application written in JS, HTML and CSS including the roslibjs and jquery libraries. A rosbridge server needs to be started before the web application is able to run. (https://github.com/RobotWebTools/rosbridge_suite/tree/develop/rosbridge_server)
 
 # rosaria_joy
 A simple P3AT movement controlling package using the `Joy` package. The file `rosaria_joy/scripts/teleop.py` is written refering [this tutorial](https://andrewdai.co/xbox-controller-ros.html#rosjoy).
+
+# Additional Notes
+Uses ROS (https://github.com/ros), the python files must be running before the web application is started.

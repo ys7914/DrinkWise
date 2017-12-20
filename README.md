@@ -23,10 +23,10 @@ Includes the speech recognition code.
 The speech synthesis code for DrinkWise. The sound_play from audio_common library was used, the soundplay_node file must be run before being able to use this code.
 
 # WebApp
-The code for the web application written in JS, HTML and CSS including the roslibjs and jquery libraries. A rosbridge server needs to be started before the web application is able to run. (https://github.com/RobotWebTools/rosbridge_suite/tree/develop/rosbridge_server)
+The code for the web application written in JS, HTML and CSS including the roslibjs and jquery libraries. A [rosbridge server](https://github.com/RobotWebTools/rosbridge_suite/tree/develop/rosbridge_server) needs to be started before the web application is able to run. 
 
 # rosaria_joy
 A simple P3AT movement controlling package using the `Joy` package. The file `rosaria_joy/scripts/teleop.py` is written refering [this tutorial](https://andrewdai.co/xbox-controller-ros.html#rosjoy).
 
 # Additional Notes
-Uses ROS (https://github.com/ros), the python files must be running before the web application is started.
+Uses [ROS](https://github.com/ros), the python files must be running before the web application is started.

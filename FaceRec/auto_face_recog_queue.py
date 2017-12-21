@@ -14,8 +14,6 @@ person = 0;
 queue = []
 temp_queue = []
 
-
-
 def queue_member_collector(frame_names, queue_names):
     for nam in frame_names:
         if nam not in queue_names:
@@ -106,14 +104,10 @@ def face_recogniser(subject_counter):
 
             face_names.append(name)
 
-        # Display the resulting image
-        #cv2.imshow('Video', frame)
-
         # Hit 'q' on the keyboard to quit!
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
-        #queue_member_collector(face_names, queue)
+	
         if(len(face_names) is not 0):
             new_faces += face_names
             short_delay -= 1
@@ -125,23 +119,22 @@ def face_recogniser(subject_counter):
     left = 0
     bottom = 0
     print(locs_and_names)
-    #print(subject_names.index(next_patron))
-    for fred in locs_and_names:
-	if next_patron is fred[0]:
-		top, right, bottom, left = fred[1]
-		break; #as in adem is about to break :/
 
+    for loc_and_name in locs_and_names:
+	if next_patron is loc_and_name[0]:
+		top, right, bottom, left = loc_and_name[1]
+		break;
+	
+    #display image of what DrinkWise can see with the next patron to be served highlighted by a red square around their face
     save_frame = cv2.flip(save_frame, 1)
     picture_out = cv2.rectangle(save_frame, (left, top), (right, bottom), (0, 0, 255), 2)
-    #picture_out = cv2.flip(picture_out, -1)
-    #picture_out = cv2.circle(save_frame, (50,50), 25, (0,0,255), 2)
     cv2.namedWindow(str(window_counter), cv2.WINDOW_NORMAL)
     cv2.imshow(str(window_counter), picture_out)
     cv2.waitKey(3000)
     cv2.destroyAllWindows()
     window_counter += 1
 
-
+    #this was needed to be repeated to make the web-cam instance properly end on the DrinkWise laptop
     video_feed.release()
     video_feed.release()
 
@@ -150,20 +143,20 @@ def face_recogniser(subject_counter):
 pub = rospy.Publisher('face', Int16, queue_size=10)
 rospy.init_node('face', anonymous=True)
 
-
-
 def get_face(data):
     global queue
     global temp_queue
     global person;
     cv2.destroyAllWindows()
     global subject_counter
+    ##the follwing ifs are only needed for testing/demonstartion
+    #if ros message is 100 start new face capture
     if data.data == 100:
         print("Looking for face")
         person, subject_counter= face_recogniser(subject_counter)
 	pub.publish(300)
         
-#again or confirmed
+    #if ros message is 200 publish the name of the next patron
     if data.data == 200: #confirm
 	pub.publish(person)
 	queue = temp_queue
@@ -172,7 +165,6 @@ def get_face(data):
  
 
 rospy.Subscriber('face', Int16, get_face)
-
 
 while not rospy.is_shutdown():
     time.sleep(5)

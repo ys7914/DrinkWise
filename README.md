@@ -17,7 +17,7 @@ Includes the code used to control the servos so that the base opon which the pat
 Includes the face recognition code with queueing functionality. Written in Python.
 
 # SpeechRec	
-Includes the speech recognition code. Uses [pocketsphinx] for ROS. Written in Python.
+Includes the speech recognition code. Uses [pocketsphinx] (https://github.com/cmusphinx/pocketsphinx)for ROS. Written in Python.
 
 # SpeechSyn	
 The speech synthesis code for DrinkWise. The sound_play from [audio_common] library was used, (http://wiki.ros.org/audio_common) the soundplay_node file must be run before being able to use this code. Written in Python.

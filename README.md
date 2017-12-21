@@ -14,13 +14,13 @@ DrinkWise is an interactive mobile bar designated for formal events and receptio
 Includes the code used to control the servos so that the base opon which the patron's cup is placed rotates until the correct bottle is above the cup. Written in C for Arduino.
 
 # FaceRec	
-Includes the face recognition code with queueing functionality.
+Includes the face recognition code with queueing functionality. Written in Python.
 
 # SpeechRec	
-Includes the speech recognition code.
+Includes the speech recognition code. Written in Python.
 
 # SpeechSyn	
-The speech synthesis code for DrinkWise. The sound_play from audio_common library was used, the soundplay_node file must be run before being able to use this code.
+The speech synthesis code for DrinkWise. The sound_play from audio_common library was used, (http://wiki.ros.org/audio_common) the soundplay_node file must be run before being able to use this code. Written in Python.
 
 # WebApp
 The code for the web application written in JS, HTML and CSS including the roslibjs and jquery libraries. A [rosbridge server](https://github.com/RobotWebTools/rosbridge_suite/tree/develop/rosbridge_server) needs to be started before the web application is able to run. 

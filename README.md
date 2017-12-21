@@ -17,10 +17,10 @@ Includes the code used to control the servos so that the base opon which the pat
 Includes the face recognition code with queueing functionality. Written in Python.
 
 # SpeechRec	
-Includes the speech recognition code. Uses [pocketsphinx] (https://github.com/cmusphinx/pocketsphinx)for ROS. Written in Python.
+Includes the speech recognition code. Uses [pocketsphinx](https://github.com/cmusphinx/pocketsphinx) for ROS. Written in Python.
 
 # SpeechSyn	
-The speech synthesis code for DrinkWise. The sound_play from [audio_common] library was used, (http://wiki.ros.org/audio_common) the soundplay_node file must be run before being able to use this code. Written in Python.
+The speech synthesis code for DrinkWise. The sound_play from [audio_common](http://wiki.ros.org/audio_common) library was used, the soundplay_node file must be run before being able to use this code. Written in Python.
 
 # WebApp
 The code for the web application written in JS, HTML and CSS including the roslibjs and jquery libraries. A [rosbridge server](https://github.com/RobotWebTools/rosbridge_suite/tree/develop/rosbridge_server) needs to be started before the web application is able to run. 
